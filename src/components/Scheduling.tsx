@@ -1,51 +1,21 @@
-import { useState, useMemo } from "react";
-import { Calendar, Clock, User, Send } from "lucide-react";
-
-const allServices = [
-  { category: "Cabelo", items: [
-    { name: "Corte Masculino", price: "R$80,00", value: 80 },
-    { name: "Corte com Visagismo", price: "R$200,00", value: 200 },
-    { name: "Visagismo", price: "R$600,00", value: 600 },
-    { name: "Corte + Sobrancelhas", price: "R$100,00", value: 100 },
-    { name: "Corte a Máquina", price: "R$50,00", value: 50 },
-    { name: "Coloração / Tonalização", price: "R$80,00", value: 80 },
-    { name: "Hidratação", price: "R$60,00", value: 60 },
-    { name: "Botox Capilar", price: "a partir de R$180,00", value: 180 },
-    { name: "Luzes", price: "a partir de R$180,00", value: 180 },
-    { name: "Platinado", price: "a partir de R$250,00", value: 250 },
-    { name: "Progressiva", price: "a partir de R$180,00", value: 180 },
-    { name: "Relaxamento", price: "R$50,00", value: 50 },
-  ]},
-  { category: "Barba e Bigode", items: [
-    { name: "Barba + Sobrancelhas", price: "R$100,00", value: 100 },
-    { name: "Barba com Máquina", price: "R$50,00", value: 50 },
-    { name: "Barboterapia", price: "R$85,00", value: 85 },
-    { name: "Barboterapia + Combo Cera", price: "R$130,00", value: 130 },
-    { name: "Barboterapia + Sobrancelhas", price: "R$100,00", value: 100 },
-    { name: "Barboterapia + Sobr. + Cera", price: "R$150,00", value: 150 },
-    { name: "Cabelo e Barba", price: "R$150,00", value: 150 },
-    { name: "Corte e Barba + Sobrancelhas", price: "R$170,00", value: 170 },
-    { name: "Cabelo + Cera Ouvido/Nariz", price: "R$150,00", value: 150 },
-  ]},
-  { category: "Estética & Bem-estar", items: [
-    { name: "Sobrancelha na Pinça", price: "R$40,00", value: 40 },
-    { name: "Depilação Combo Ouvido + Nariz", price: "R$80,00", value: 80 },
-    { name: "Depilação Nariz ou Ouvido", price: "R$50,00", value: 50 },
-    { name: "Massagem Terapêutica", price: "R$180,00", value: 180 },
-    { name: "Massagem Relaxante", price: "R$180,00", value: 180 },
-    { name: "Drenagem Linfática", price: "R$180,00", value: 180 },
-  ]},
-];
+import { useEffect, useMemo, useState } from "react";
+import { Calendar, Clock, Send, User } from "lucide-react";
+import { SCHEDULING_PREFILL_EVENT, getServiceByName, serviceCategories } from "@/data/services";
+import { buildWhatsAppLink } from "@/lib/contact";
 
 const getHours = (dayOfWeek: number): string[] => {
   const hours: string[] = [];
+
   if (dayOfWeek === 0) return [];
+
   const start = 9;
-  const end = (dayOfWeek === 4 || dayOfWeek === 5) ? 21 : 20;
-  for (let h = start; h < end; h++) {
-    hours.push(`${String(h).padStart(2, "0")}:00`);
-    hours.push(`${String(h).padStart(2, "0")}:30`);
+  const end = dayOfWeek === 4 || dayOfWeek === 5 ? 21 : 20;
+
+  for (let hour = start; hour < end; hour += 1) {
+    hours.push(`${String(hour).padStart(2, "0")}:00`);
+    hours.push(`${String(hour).padStart(2, "0")}:30`);
   }
+
   return hours;
 };
 
@@ -55,17 +25,26 @@ const Scheduling = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
-  const selectedServiceData = useMemo(() => {
-    for (const cat of allServices) {
-      const found = cat.items.find((s) => s.name === selectedService);
-      if (found) return found;
-    }
-    return null;
-  }, [selectedService]);
+  useEffect(() => {
+    const handlePrefill = (event: Event) => {
+      const customEvent = event as CustomEvent<string>;
+      if (customEvent.detail) {
+        setSelectedService(customEvent.detail);
+      }
+    };
+
+    window.addEventListener(SCHEDULING_PREFILL_EVENT, handlePrefill as EventListener);
+
+    return () => {
+      window.removeEventListener(SCHEDULING_PREFILL_EVENT, handlePrefill as EventListener);
+    };
+  }, []);
+
+  const selectedServiceData = useMemo(() => getServiceByName(selectedService), [selectedService]);
 
   const dayOfWeek = useMemo(() => {
     if (!date) return -1;
-    return new Date(date + "T12:00:00").getDay();
+    return new Date(`${date}T12:00:00`).getDay();
   }, [date]);
 
   const availableHours = useMemo(() => {
@@ -74,58 +53,65 @@ const Scheduling = () => {
   }, [dayOfWeek]);
 
   const isSunday = dayOfWeek === 0;
-
   const minDate = useMemo(() => new Date().toISOString().split("T")[0], []);
-
-  const canSubmit = name.trim() && selectedService && date && time && !isSunday;
+  const canSubmit = Boolean(name.trim() && selectedService && date && time && !isSunday);
 
   const handleSubmit = () => {
     if (!canSubmit || !selectedServiceData) return;
-    const dateFormatted = new Date(date + "T12:00:00").toLocaleDateString("pt-BR");
-    const msg = `Olá, meu nome é ${name.trim()}.%0AGostaria de agendar o serviço: ${selectedServiceData.name}.%0AValor: ${selectedServiceData.price}.%0AData desejada: ${dateFormatted}.%0AHorário escolhido: ${time}.`;
-    window.open(`https://wa.me/5511948830502?text=${msg}`, "_blank");
+
+    const dateFormatted = new Date(`${date}T12:00:00`).toLocaleDateString("pt-BR");
+    const message = [
+      `Olá, meu nome é ${name.trim()}.`,
+      "",
+      `Gostaria de agendar o serviço: ${selectedServiceData.name}.`,
+      `Valor: ${selectedServiceData.price}.`,
+      `Data desejada: ${dateFormatted}.`,
+      `Horário escolhido: ${time}.`,
+    ].join("\n");
+
+    window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
   };
 
   return (
-    <section id="agendamento" className="py-20 bg-secondary">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <h2 className="text-3xl md:text-4xl font-display text-center mb-4">
+    <section id="agendamento" className="scroll-mt-24 py-20 bg-secondary">
+      <div className="container mx-auto max-w-3xl px-4">
+        <h2 className="mb-4 text-center text-3xl md:text-4xl">
           Agende seu <span className="text-gold">horário</span>
         </h2>
-        <p className="text-center text-muted-foreground mb-10">
+        <p className="mb-10 text-center text-muted-foreground">
           Preencha os dados abaixo e confirme pelo WhatsApp.
         </p>
 
-        <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-6">
+        <div className="space-y-6 rounded-2xl border border-border bg-card p-6 md:p-8">
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
               <User size={16} className="text-gold" /> Seu nome
             </label>
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(event) => setName(event.target.value)}
               placeholder="Digite seu nome"
               maxLength={100}
-              className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 transition"
+              className="w-full rounded-lg border border-border bg-secondary px-4 py-3 text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 transition"
             />
           </div>
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
               <Calendar size={16} className="text-gold" /> Serviço
             </label>
             <select
               value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
-              className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 transition appearance-none"
+              onChange={(event) => setSelectedService(event.target.value)}
+              className="w-full appearance-none rounded-lg border border-border bg-secondary px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 transition"
             >
               <option value="">Selecione um serviço</option>
-              {allServices.map((cat) => (
-                <optgroup key={cat.category} label={cat.category}>
-                  {cat.items.map((s) => (
-                    <option key={s.name} value={s.name}>
-                      {s.name} — {s.price}
+              {serviceCategories.map((category) => (
+                <optgroup key={category.name} label={category.name}>
+                  {category.services.map((service) => (
+                    <option key={service.name} value={service.name}>
+                      {service.name} — {service.price}
                     </option>
                   ))}
                 </optgroup>
@@ -134,45 +120,47 @@ const Scheduling = () => {
           </div>
 
           {selectedServiceData && (
-            <div className="bg-gold/10 border border-gold/20 rounded-lg p-4 text-center">
+            <div className="rounded-lg border border-gold/20 bg-gold/10 p-4 text-center">
               <span className="text-sm text-muted-foreground">Valor:</span>
-              <span className="ml-2 text-gold font-display text-xl font-bold">{selectedServiceData.price}</span>
+              <span className="ml-2 font-display text-xl font-bold text-gold">{selectedServiceData.price}</span>
             </div>
           )}
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
+            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
               <Calendar size={16} className="text-gold" /> Data
             </label>
             <input
               type="date"
               value={date}
               min={minDate}
-              onChange={(e) => { setDate(e.target.value); setTime(""); }}
-              className="w-full bg-secondary border border-border rounded-lg px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 transition"
+              onChange={(event) => {
+                setDate(event.target.value);
+                setTime("");
+              }}
+              className="w-full rounded-lg border border-border bg-secondary px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 transition"
             />
-            {isSunday && (
-              <p className="text-destructive text-sm mt-1">Não abrimos aos domingos. Escolha outro dia.</p>
-            )}
+            {isSunday && <p className="mt-1 text-sm text-destructive">Não abrimos aos domingos. Escolha outro dia.</p>}
           </div>
 
           {availableHours.length > 0 && !isSunday && (
             <div>
-              <label className="flex items-center gap-2 text-sm font-medium text-foreground mb-2">
+              <label className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
                 <Clock size={16} className="text-gold" /> Horário
               </label>
-              <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                {availableHours.map((h) => (
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
+                {availableHours.map((hour) => (
                   <button
-                    key={h}
-                    onClick={() => setTime(h)}
-                    className={`py-2 px-2 rounded-lg text-sm font-medium transition-colors border ${
-                      time === h
-                        ? "gradient-gold text-primary-foreground border-transparent"
-                        : "bg-secondary border-border text-foreground hover:border-gold/40"
+                    key={hour}
+                    type="button"
+                    onClick={() => setTime(hour)}
+                    className={`rounded-lg border px-2 py-2.5 text-sm font-medium transition-colors ${
+                      time === hour
+                        ? "gradient-gold border-transparent text-primary-foreground"
+                        : "border-border bg-secondary text-foreground hover:border-gold/40"
                     }`}
                   >
-                    {h}
+                    {hour}
                   </button>
                 ))}
               </div>
@@ -180,12 +168,11 @@ const Scheduling = () => {
           )}
 
           <button
+            type="button"
             onClick={handleSubmit}
             disabled={!canSubmit}
-            className={`w-full py-4 rounded-lg font-semibold text-lg flex items-center justify-center gap-2 transition-all ${
-              canSubmit
-                ? "gradient-gold text-primary-foreground hover:opacity-90"
-                : "bg-muted text-muted-foreground cursor-not-allowed"
+            className={`flex w-full items-center justify-center gap-2 rounded-lg py-4 text-lg font-semibold transition-all ${
+              canSubmit ? "gradient-gold text-primary-foreground hover:opacity-90" : "cursor-not-allowed bg-muted text-muted-foreground"
             }`}
           >
             <Send size={20} />
