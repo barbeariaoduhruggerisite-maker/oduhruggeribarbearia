@@ -11,29 +11,41 @@ const schedule = [
 ];
 
 const Hours = () => (
-  <section id="horarios" className="py-20 bg-secondary">
-    <div className="container mx-auto px-4 max-w-lg">
-      <h2 className="text-3xl md:text-4xl font-display text-center mb-10">
+  <section id="horarios" className="scroll-mt-24 py-20 bg-secondary">
+    <div className="container mx-auto max-w-lg px-4">
+      <h2 className="mb-10 text-center text-3xl md:text-4xl">
         Horário de <span className="text-gold">Funcionamento</span>
       </h2>
-      <div className="bg-card border border-border rounded-2xl p-6 md:p-8 space-y-3">
-        {schedule.map((s) => (
+
+      <div className="space-y-3 rounded-2xl border border-border bg-card p-6 md:p-8">
+        {schedule.map((item) => (
           <div
-            key={s.day}
-            className={`flex items-center justify-between py-3 px-4 rounded-lg transition-colors ${
-              s.highlight ? "bg-gold/10 border border-gold/20" : s.closed ? "opacity-50" : ""
+            key={item.day}
+            className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+              item.highlight ? "border border-gold/20 bg-gold/10" : item.closed ? "opacity-50" : ""
             }`}
           >
-            <div className="flex items-center gap-3">
-              <Clock size={16} className={s.highlight ? "text-gold" : "text-muted-foreground"} />
-              <span className={`font-medium ${s.highlight ? "text-gold" : "text-foreground"}`}>{s.day}</span>
+            <div className="flex min-w-0 items-center gap-3">
+              <Clock size={16} className={item.highlight ? "text-gold" : "text-muted-foreground"} />
+              <span className={`whitespace-nowrap text-sm font-medium sm:text-base ${item.highlight ? "text-gold" : "text-foreground"}`}>
+                {item.day}
+              </span>
             </div>
-            <span className={`font-semibold whitespace-nowrap ${s.highlight ? "text-gold" : s.closed ? "text-destructive" : "text-foreground"}`}>
-              {s.hours}
-              {s.highlight && (
-                <span className="ml-2 text-xs bg-gold/20 text-gold px-2 py-0.5 rounded-full">estendido</span>
+
+            <div className="flex flex-col items-end gap-1 sm:flex-row sm:items-center sm:gap-2">
+              <span
+                className={`whitespace-nowrap text-sm font-semibold sm:text-base ${
+                  item.highlight ? "text-gold" : item.closed ? "text-destructive" : "text-foreground"
+                }`}
+              >
+                {item.hours}
+              </span>
+              {item.highlight && (
+                <span className="self-end rounded-full bg-gold/20 px-2 py-0.5 text-[11px] font-medium text-gold sm:self-auto sm:text-xs">
+                  estendido
+                </span>
               )}
-            </span>
+            </div>
           </div>
         ))}
       </div>
