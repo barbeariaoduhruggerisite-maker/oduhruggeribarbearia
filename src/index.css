@@ -48,6 +48,8 @@
     --gold: 43 80% 55%;
     --gold-light: 43 70% 70%;
     --gold-dark: 43 90% 40%;
+    --whatsapp: 142 70% 49%;
+    --whatsapp-shadow: 142 60% 30%;
   }
 }
 
@@ -87,5 +89,11 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  .bg-whatsapp {
+    background-color: hsl(var(--whatsapp));
+  }
+  .shadow-whatsapp {
+    box-shadow: 0 12px 24px -12px hsl(var(--whatsapp-shadow) / 0.8);
   }
 }

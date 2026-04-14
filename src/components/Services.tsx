@@ -1,10 +1,14 @@
-import { SCHEDULING_PREFILL_EVENT, serviceCategories } from "@/data/services";
+import { serviceCategories } from "@/data/services";
+import { buildWhatsAppLink } from "@/lib/contact";
 
 const Services = () => {
-  const handleSchedule = (serviceName: string) => {
-    window.dispatchEvent(new CustomEvent<string>(SCHEDULING_PREFILL_EVENT, { detail: serviceName }));
-    document.querySelector("#agendamento")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const buildServiceMessage = (serviceName: string, price: string) =>
+    [
+      "Olá!",
+      "",
+      `Gostaria de agendar o serviço: ${serviceName}.`,
+      `Valor: ${price}.`,
+    ].join("\n");
 
   return (
     <section id="servicos" className="scroll-mt-24 py-20">
@@ -42,13 +46,14 @@ const Services = () => {
 
                     <div className="mt-5 flex items-end justify-between gap-3">
                       <span className="font-display text-2xl font-bold text-gold">{service.price}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleSchedule(service.name)}
+                      <a
+                        href={buildWhatsAppLink(buildServiceMessage(service.name, service.price))}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="rounded-md bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground transition-colors hover:bg-gold hover:text-primary-foreground"
                       >
                         Agendar
-                      </button>
+                      </a>
                     </div>
                   </article>
                 ))}
