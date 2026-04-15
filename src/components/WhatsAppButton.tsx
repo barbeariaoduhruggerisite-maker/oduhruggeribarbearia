@@ -1,9 +1,9 @@
 import { MessageCircle } from "lucide-react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { buildWhatsAppLink, GENERIC_WHATSAPP_MESSAGE } from "@/lib/contact";
 
 const WhatsAppButton = () => (
-  <motion.a
+  <m.a
     href={buildWhatsAppLink(GENERIC_WHATSAPP_MESSAGE)}
     target="_blank"
     rel="noopener noreferrer"
@@ -16,13 +16,13 @@ const WhatsAppButton = () => (
     whileTap={{ scale: 0.93 }}
   >
     {/* Anel de pulse */}
-    <motion.span
+    <m.span
       className="absolute inset-0 rounded-full bg-whatsapp"
       animate={{ scale: [1, 1.55], opacity: [0.45, 0] }}
       transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
     />
     <MessageCircle className="relative text-primary-foreground" size={28} />
-  </motion.a>
+  </m.a>
 );
 
 export default WhatsAppButton;

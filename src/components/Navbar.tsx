@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.jpeg";
 
 const navItems = [
@@ -33,7 +33,7 @@ const Navbar = () => {
   };
 
   return (
-    <motion.nav
+    <m.nav
       className="fixed left-0 right-0 top-0 z-50 border-b border-border backdrop-blur-md"
       style={{ backgroundColor: scrolled ? "hsl(var(--background)/0.97)" : "hsl(var(--background)/0.85)" }}
       initial={{ y: -80, opacity: 0 }}
@@ -46,7 +46,7 @@ const Navbar = () => {
           onClick={(event) => { event.preventDefault(); scrollTo("#inicio"); }}
           className="flex items-center gap-2"
         >
-          <motion.img
+          <m.img
             src={logo}
             alt="ODuh Ruggeri"
             className="h-10 w-10 rounded-full object-cover"
@@ -58,7 +58,7 @@ const Navbar = () => {
 
         <div className="hidden items-center gap-6 md:flex">
           {navItems.map((item, i) => (
-            <motion.button
+            <m.button
               key={item.href}
               type="button"
               onClick={() => scrollTo(item.href)}
@@ -68,10 +68,10 @@ const Navbar = () => {
               transition={{ delay: 0.1 + i * 0.06, duration: 0.35 }}
             >
               {item.label}
-            </motion.button>
+            </m.button>
           ))}
 
-          <motion.button
+          <m.button
             type="button"
             onClick={() => scrollTo("#agendamento")}
             className="gradient-gold rounded-lg px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
@@ -82,7 +82,7 @@ const Navbar = () => {
             whileTap={{ scale: 0.95 }}
           >
             Agendar
-          </motion.button>
+          </m.button>
         </div>
 
         <button
@@ -93,7 +93,7 @@ const Navbar = () => {
           aria-label={open ? "Fechar menu" : "Abrir menu"}
         >
           <AnimatePresence mode="wait" initial={false}>
-            <motion.span
+            <m.span
               key={open ? "close" : "menu"}
               initial={{ rotate: -90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
@@ -101,14 +101,14 @@ const Navbar = () => {
               transition={{ duration: 0.18 }}
             >
               {open ? <X size={24} /> : <Menu size={24} />}
-            </motion.span>
+            </m.span>
           </AnimatePresence>
         </button>
       </div>
 
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-b border-border bg-background/95 backdrop-blur-md md:hidden"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -117,7 +117,7 @@ const Navbar = () => {
           >
             <div className="flex min-h-full flex-col gap-3 p-4">
               {navItems.map((item, i) => (
-                <motion.button
+                <m.button
                   key={item.href}
                   type="button"
                   onClick={() => scrollTo(item.href)}
@@ -127,10 +127,10 @@ const Navbar = () => {
                   transition={{ delay: i * 0.05 }}
                 >
                   {item.label}
-                </motion.button>
+                </m.button>
               ))}
 
-              <motion.button
+              <m.button
                 type="button"
                 onClick={() => scrollTo("#agendamento")}
                 className="gradient-gold mt-2 rounded-lg px-4 py-3 text-center text-base font-semibold text-primary-foreground"
@@ -139,12 +139,12 @@ const Navbar = () => {
                 transition={{ delay: navItems.length * 0.05 }}
               >
                 Agendar
-              </motion.button>
+              </m.button>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </m.nav>
   );
 };
 

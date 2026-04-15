@@ -1,5 +1,5 @@
 import { Clock } from "lucide-react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { fadeInUp, stagger, staggerSlow, viewport } from "@/lib/motion";
 
 const schedule = [
@@ -20,7 +20,7 @@ const rowVariant = {
 const Hours = () => (
   <section id="horarios" className="scroll-mt-24 py-20 bg-secondary">
     <div className="container mx-auto max-w-lg px-4">
-      <motion.h2
+      <m.h2
         className="mb-10 text-center text-3xl md:text-4xl"
         initial="hidden"
         whileInView="visible"
@@ -28,9 +28,9 @@ const Hours = () => (
         variants={fadeInUp}
       >
         Horário de <span className="text-gold">Funcionamento</span>
-      </motion.h2>
+      </m.h2>
 
-      <motion.div
+      <m.div
         className="space-y-3 rounded-2xl border border-border bg-card p-6 md:p-8"
         initial="hidden"
         whileInView="visible"
@@ -38,7 +38,7 @@ const Hours = () => (
         variants={staggerSlow}
       >
         {schedule.map((item) => (
-          <motion.div
+          <m.div
             key={item.day}
             variants={rowVariant}
             className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
@@ -66,9 +66,9 @@ const Hours = () => (
                 </span>
               )}
             </div>
-          </motion.div>
+          </m.div>
         ))}
-      </motion.div>
+      </m.div>
     </div>
   </section>
 );

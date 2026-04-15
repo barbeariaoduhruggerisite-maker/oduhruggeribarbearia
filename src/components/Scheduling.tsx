@@ -4,7 +4,6 @@ import { SCHEDULING_PREFILL_EVENT, getServiceByName, serviceCategories } from "@
 import { buildWhatsAppLink } from "@/lib/contact";
 import {
   type AgendarParams,
-  type Barbeiro,
   buildWhatsAppMessage,
   criarAgendamento,
   fetchBarbeiros,
@@ -17,16 +16,15 @@ const Scheduling = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [barbeiroId, setBarbeiroId] = useState("");
+  const [barbeiroNome, setBarbeiroNome] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
 
   // ── Dados carregados do banco ──
-  const [barbeiros, setBarbeiros] = useState<Barbeiro[]>([]);
   const [availableHours, setAvailableHours] = useState<string[]>([]);
 
   // ── Estados de carregamento e erro ──
-  const [isLoadingBarbeiros, setIsLoadingBarbeiros] = useState(false);
   const [isLoadingSlots, setIsLoadingSlots] = useState(false);
   const [slotsError, setSlotsError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,13 +33,15 @@ const Scheduling = () => {
     alternatives: string[];
   } | null>(null);
 
-  // ── Carrega barbeiros ao montar ──
+  // ── Auto-seleciona o barbeiro ativo (Oduh Ruggeri) ao montar ──
   useEffect(() => {
     if (!isSupabaseConfigured) return;
-    setIsLoadingBarbeiros(true);
-    fetchBarbeiros()
-      .then(setBarbeiros)
-      .finally(() => setIsLoadingBarbeiros(false));
+    fetchBarbeiros().then((list) => {
+      if (list.length > 0) {
+        setBarbeiroId(list[0].id);
+        setBarbeiroNome(list[0].nome);
+      }
+    });
   }, []);
 
   // ── Pre-preenchimento de servico via evento customizado (botao "Agendar" nos cards) ──
@@ -79,10 +79,6 @@ const Scheduling = () => {
   }, [barbeiroId, selectedService, date]);
 
   const selectedServiceData = useMemo(() => getServiceByName(selectedService), [selectedService]);
-  const selectedBarbeiro = useMemo(
-    () => barbeiros.find((b) => b.id === barbeiroId) ?? null,
-    [barbeiros, barbeiroId]
-  );
 
   const dayOfWeek = useMemo(() => {
     if (!date) return -1;
@@ -105,7 +101,7 @@ const Scheduling = () => {
 
   // ── Envio do formulario ──
   const handleSubmit = async () => {
-    if (!canSubmit || !selectedServiceData || !selectedBarbeiro) return;
+    if (!canSubmit || !selectedServiceData) return;
 
     setIsSubmitting(true);
     setConflictError(null);
@@ -114,7 +110,7 @@ const Scheduling = () => {
       clienteNome: name.trim(),
       clienteTelefone: phone.trim(),
       barbeiroId,
-      barbeiroNome: selectedBarbeiro.nome,
+      barbeiroNome,
       servicoNome: selectedService,
       servicoPreco: selectedServiceData.price,
       data: date,
@@ -208,28 +204,6 @@ const Scheduling = () => {
               maxLength={20}
               className={inputClass}
             />
-          </div>
-
-          {/* Campo: Barbeiro */}
-          <div>
-            <label className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
-              <User size={16} className="text-gold" /> Barbeiro
-            </label>
-            <select
-              value={barbeiroId}
-              onChange={(e) => setBarbeiroId(e.target.value)}
-              disabled={isLoadingBarbeiros}
-              className={selectClass}
-            >
-              <option value="">
-                {isLoadingBarbeiros ? "Carregando..." : "Selecione um barbeiro"}
-              </option>
-              {barbeiros.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.nome}
-                </option>
-              ))}
-            </select>
           </div>
 
           {/* Campo: Servico */}

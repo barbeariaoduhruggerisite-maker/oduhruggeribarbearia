@@ -1,27 +1,27 @@
 import { MapPin, Navigation } from "lucide-react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ADDRESS_LABEL, EMAIL_ADDRESS, INSTAGRAM_URL, MAPS_DIRECTIONS_URL, MAPS_EMBED_URL, MAPS_PLACE_URL } from "@/lib/contact";
 import { fadeInUp, slideInLeft, slideInRight, stagger, viewport } from "@/lib/motion";
 
 const Location = () => (
   <section id="localizacao" className="scroll-mt-24 py-20">
     <div className="container mx-auto px-4">
-      <motion.div
+      <m.div
         initial="hidden"
         whileInView="visible"
         viewport={viewport}
         variants={stagger}
       >
-        <motion.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
+        <m.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
           <span className="text-gold">Localização</span>
-        </motion.h2>
-        <motion.p variants={fadeInUp} className="mx-auto mb-10 max-w-xl text-center text-muted-foreground">
+        </m.h2>
+        <m.p variants={fadeInUp} className="mx-auto mb-10 max-w-xl text-center text-muted-foreground">
           Localização privilegiada na Zona Norte de São Paulo, com fácil acesso.
-        </motion.p>
-      </motion.div>
+        </m.p>
+      </m.div>
 
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
-        <motion.div
+        <m.div
           className="aspect-video overflow-hidden rounded-xl border border-border md:aspect-auto"
           initial="hidden"
           whileInView="visible"
@@ -35,9 +35,9 @@ const Location = () => (
             loading="lazy"
             allowFullScreen
           />
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           className="flex flex-col justify-center rounded-xl border border-border bg-card p-6 md:p-8"
           initial="hidden"
           whileInView="visible"
@@ -81,7 +81,7 @@ const Location = () => (
               Abrir no Maps
             </a>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </div>
   </section>

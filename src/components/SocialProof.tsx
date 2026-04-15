@@ -1,29 +1,29 @@
 import { Star, Quote } from "lucide-react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { fadeInUp, scaleIn, stagger, viewport } from "@/lib/motion";
 
 const SocialProof = () => (
   <section className="py-20 bg-secondary">
     <div className="container mx-auto px-4 text-center">
-      <motion.div
+      <m.div
         initial="hidden"
         whileInView="visible"
         viewport={viewport}
         variants={stagger}
       >
-        <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-display mb-4">
+        <m.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-display mb-4">
           Reconhecimento & <span className="text-gold">Confiança</span>
-        </motion.h2>
-        <motion.p variants={fadeInUp} className="text-muted-foreground mb-10 max-w-xl mx-auto">
+        </m.h2>
+        <m.p variants={fadeInUp} className="text-muted-foreground mb-10 max-w-xl mx-auto">
           Clientes satisfeitos e reconhecimento crescente na região.
-        </motion.p>
+        </m.p>
 
-        <motion.div
+        <m.div
           variants={scaleIn}
           className="max-w-2xl mx-auto bg-card border border-border rounded-2xl p-8 md:p-10 relative"
         >
           <Quote className="text-gold/20 absolute top-4 left-4" size={48} />
-          <motion.div
+          <m.div
             className="flex justify-center gap-1 mb-4"
             variants={stagger}
             initial="hidden"
@@ -31,7 +31,7 @@ const SocialProof = () => (
             viewport={viewport}
           >
             {[...Array(5)].map((_, i) => (
-              <motion.span
+              <m.span
                 key={i}
                 variants={{
                   hidden: { opacity: 0, scale: 0 },
@@ -39,17 +39,17 @@ const SocialProof = () => (
                 }}
               >
                 <Star className="text-gold fill-gold" size={20} />
-              </motion.span>
+              </m.span>
             ))}
-          </motion.div>
+          </m.div>
           <p className="text-lg md:text-xl text-foreground font-display italic mb-4">
             "A barbearia já recebeu nomes conhecidos como o humorista Thiago Ventura."
           </p>
           <p className="text-sm text-muted-foreground">
             Referência em estilo e atendimento na Casa Verde, SP.
           </p>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </div>
   </section>
 );

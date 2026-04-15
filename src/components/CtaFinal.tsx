@@ -1,23 +1,23 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { buildWhatsAppLink, GENERIC_WHATSAPP_MESSAGE } from "@/lib/contact";
 import { fadeInUp, stagger, viewport } from "@/lib/motion";
 
 const CtaFinal = () => (
   <section className="py-20">
     <div className="container mx-auto max-w-2xl px-4 text-center">
-      <motion.div
+      <m.div
         initial="hidden"
         whileInView="visible"
         viewport={viewport}
         variants={stagger}
       >
-        <motion.h2 variants={fadeInUp} className="mb-4 text-3xl md:text-4xl">
+        <m.h2 variants={fadeInUp} className="mb-4 text-3xl md:text-4xl">
           Seu visual merece <span className="text-gold">atenção profissional.</span>
-        </motion.h2>
-        <motion.p variants={fadeInUp} className="mb-8 text-muted-foreground">
+        </m.h2>
+        <m.p variants={fadeInUp} className="mb-8 text-muted-foreground">
           Agende agora e tenha uma experiência premium na ODuh Ruggeri Barbearia & Visagismo.
-        </motion.p>
-        <motion.a
+        </m.p>
+        <m.a
           href={buildWhatsAppLink(GENERIC_WHATSAPP_MESSAGE)}
           target="_blank"
           rel="noopener noreferrer"
@@ -27,8 +27,8 @@ const CtaFinal = () => (
           whileTap={{ scale: 0.97 }}
         >
           Agendar agora no WhatsApp
-        </motion.a>
-      </motion.div>
+        </m.a>
+      </m.div>
     </div>
   </section>
 );

@@ -1,29 +1,33 @@
+import { lazy, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ValueProposition from "@/components/ValueProposition";
-import Services from "@/components/Services";
-import SocialProof from "@/components/SocialProof";
-import Gallery from "@/components/Gallery";
-import Hours from "@/components/Hours";
-import Location from "@/components/Location";
-import Scheduling from "@/components/Scheduling";
-import CtaFinal from "@/components/CtaFinal";
-import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+
+const Services = lazy(() => import("@/components/Services"));
+const SocialProof = lazy(() => import("@/components/SocialProof"));
+const Gallery = lazy(() => import("@/components/Gallery"));
+const Hours = lazy(() => import("@/components/Hours"));
+const Location = lazy(() => import("@/components/Location"));
+const Scheduling = lazy(() => import("@/components/Scheduling"));
+const CtaFinal = lazy(() => import("@/components/CtaFinal"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 const Index = () => (
   <>
     <Navbar />
     <Hero />
     <ValueProposition />
-    <Services />
-    <SocialProof />
-    <Gallery />
-    <Hours />
-    <Location />
-    <Scheduling />
-    <CtaFinal />
-    <Footer />
+    <Suspense fallback={null}>
+      <Services />
+      <SocialProof />
+      <Gallery />
+      <Hours />
+      <Location />
+      <Scheduling />
+      <CtaFinal />
+      <Footer />
+    </Suspense>
     <WhatsAppButton />
   </>
 );

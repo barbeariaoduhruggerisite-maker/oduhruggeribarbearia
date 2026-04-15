@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import clientHappy from "@/assets/client-happy.jpeg";
 import team from "@/assets/team.jpeg";
 import team2 from "@/assets/team-2.jpeg";
@@ -14,21 +14,21 @@ const images = [
 const Gallery = () => (
   <section id="galeria" className="scroll-mt-24 py-20">
     <div className="container mx-auto px-4">
-      <motion.div
+      <m.div
         initial="hidden"
         whileInView="visible"
         viewport={viewport}
         variants={stagger}
       >
-        <motion.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
+        <m.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
           Ambiente & <span className="text-gold">Clientes</span>
-        </motion.h2>
-        <motion.p variants={fadeInUp} className="mb-12 text-center text-muted-foreground">
+        </m.h2>
+        <m.p variants={fadeInUp} className="mb-12 text-center text-muted-foreground">
           Conheça nosso espaço e a energia que faz a diferença.
-        </motion.p>
-      </motion.div>
+        </m.p>
+      </m.div>
 
-      <motion.div
+      <m.div
         className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3"
         initial="hidden"
         whileInView="visible"
@@ -36,7 +36,7 @@ const Gallery = () => (
         variants={staggerSlow}
       >
         {images.map((image) => (
-          <motion.div
+          <m.div
             key={image.alt}
             variants={scaleIn}
             className="aspect-square overflow-hidden rounded-xl border border-border"
@@ -48,11 +48,11 @@ const Gallery = () => (
               loading="lazy"
               className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
             />
-          </motion.div>
+          </m.div>
         ))}
-      </motion.div>
+      </m.div>
 
-      <motion.div
+      <m.div
         className="mx-auto max-w-2xl"
         initial="hidden"
         whileInView="visible"
@@ -79,7 +79,7 @@ const Gallery = () => (
             Assista nosso Reel no Instagram
           </a>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   </section>
 );

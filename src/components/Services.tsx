@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { serviceCategories } from "@/data/services";
 import { buildWhatsAppLink } from "@/lib/contact";
 import { fadeInUp, scaleIn, stagger, staggerSlow, viewport } from "@/lib/motion";
@@ -15,39 +15,39 @@ const Services = () => {
   return (
     <section id="servicos" className="scroll-mt-24 py-20">
       <div className="container mx-auto px-4">
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="visible"
           viewport={viewport}
           variants={stagger}
         >
-          <motion.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
+          <m.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
             Serviços & <span className="text-gold">Valores</span>
-          </motion.h2>
-          <motion.p variants={fadeInUp} className="mx-auto mb-12 max-w-xl text-center text-muted-foreground">
+          </m.h2>
+          <m.p variants={fadeInUp} className="mx-auto mb-12 max-w-xl text-center text-muted-foreground">
             Cada serviço é executado com precisão, técnica e atenção aos detalhes.
-          </motion.p>
-        </motion.div>
+          </m.p>
+        </m.div>
 
         <div className="space-y-12">
           {serviceCategories.map((category) => (
-            <motion.div
+            <m.div
               key={category.name}
               initial="hidden"
               whileInView="visible"
               viewport={viewport}
               variants={staggerSlow}
             >
-              <motion.h3
+              <m.h3
                 variants={fadeInUp}
                 className="mb-6 text-center font-display text-xl text-gold md:text-left"
               >
                 {category.name}
-              </motion.h3>
+              </m.h3>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {category.services.map((service) => (
-                  <motion.article
+                  <m.article
                     key={service.name}
                     variants={scaleIn}
                     whileHover={{ y: -4, transition: { duration: 0.18 } }}
@@ -77,14 +77,14 @@ const Services = () => {
                         Agendar
                       </a>
                     </div>
-                  </motion.article>
+                  </m.article>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
 
-        <motion.p
+        <m.p
           className="mt-10 text-center text-sm text-muted-foreground"
           initial="hidden"
           whileInView="visible"
@@ -92,7 +92,7 @@ const Services = () => {
           variants={fadeInUp}
         >
           Atendimento com horário marcado para melhor experiência.
-        </motion.p>
+        </m.p>
       </div>
     </section>
   );
