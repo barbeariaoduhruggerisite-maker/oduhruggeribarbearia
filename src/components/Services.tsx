@@ -1,5 +1,7 @@
+import { motion } from "framer-motion";
 import { serviceCategories } from "@/data/services";
 import { buildWhatsAppLink } from "@/lib/contact";
+import { fadeInUp, scaleIn, stagger, staggerSlow, viewport } from "@/lib/motion";
 
 const Services = () => {
   const buildServiceMessage = (serviceName: string, price: string) =>
@@ -13,22 +15,42 @@ const Services = () => {
   return (
     <section id="servicos" className="scroll-mt-24 py-20">
       <div className="container mx-auto px-4">
-        <h2 className="mb-4 text-center text-3xl md:text-4xl">
-          Serviços & <span className="text-gold">Valores</span>
-        </h2>
-        <p className="mx-auto mb-12 max-w-xl text-center text-muted-foreground">
-          Cada serviço é executado com precisão, técnica e atenção aos detalhes.
-        </p>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          variants={stagger}
+        >
+          <motion.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
+            Serviços & <span className="text-gold">Valores</span>
+          </motion.h2>
+          <motion.p variants={fadeInUp} className="mx-auto mb-12 max-w-xl text-center text-muted-foreground">
+            Cada serviço é executado com precisão, técnica e atenção aos detalhes.
+          </motion.p>
+        </motion.div>
 
         <div className="space-y-12">
           {serviceCategories.map((category) => (
-            <div key={category.name}>
-              <h3 className="mb-6 text-center font-display text-xl text-gold md:text-left">{category.name}</h3>
+            <motion.div
+              key={category.name}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewport}
+              variants={staggerSlow}
+            >
+              <motion.h3
+                variants={fadeInUp}
+                className="mb-6 text-center font-display text-xl text-gold md:text-left"
+              >
+                {category.name}
+              </motion.h3>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {category.services.map((service) => (
-                  <article
+                  <motion.article
                     key={service.name}
+                    variants={scaleIn}
+                    whileHover={{ y: -4, transition: { duration: 0.18 } }}
                     className={`relative flex h-full flex-col justify-between rounded-xl border bg-card p-5 transition-colors hover:border-gold/40 ${
                       service.featured ? "border-primary/40" : "border-border"
                     }`}
@@ -55,16 +77,22 @@ const Services = () => {
                         Agendar
                       </a>
                     </div>
-                  </article>
+                  </motion.article>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        <p className="mt-10 text-center text-sm text-muted-foreground">
+        <motion.p
+          className="mt-10 text-center text-sm text-muted-foreground"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          variants={fadeInUp}
+        >
           Atendimento com horário marcado para melhor experiência.
-        </p>
+        </motion.p>
       </div>
     </section>
   );

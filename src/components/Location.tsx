@@ -1,18 +1,33 @@
 import { MapPin, Navigation } from "lucide-react";
+import { motion } from "framer-motion";
 import { ADDRESS_LABEL, EMAIL_ADDRESS, INSTAGRAM_URL, MAPS_DIRECTIONS_URL, MAPS_EMBED_URL, MAPS_PLACE_URL } from "@/lib/contact";
+import { fadeInUp, slideInLeft, slideInRight, stagger, viewport } from "@/lib/motion";
 
 const Location = () => (
   <section id="localizacao" className="scroll-mt-24 py-20">
     <div className="container mx-auto px-4">
-      <h2 className="mb-4 text-center text-3xl md:text-4xl">
-        <span className="text-gold">Localização</span>
-      </h2>
-      <p className="mx-auto mb-10 max-w-xl text-center text-muted-foreground">
-        Localização privilegiada na Zona Norte de São Paulo, com fácil acesso.
-      </p>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        variants={stagger}
+      >
+        <motion.h2 variants={fadeInUp} className="mb-4 text-center text-3xl md:text-4xl">
+          <span className="text-gold">Localização</span>
+        </motion.h2>
+        <motion.p variants={fadeInUp} className="mx-auto mb-10 max-w-xl text-center text-muted-foreground">
+          Localização privilegiada na Zona Norte de São Paulo, com fácil acesso.
+        </motion.p>
+      </motion.div>
 
       <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="aspect-video overflow-hidden rounded-xl border border-border md:aspect-auto">
+        <motion.div
+          className="aspect-video overflow-hidden rounded-xl border border-border md:aspect-auto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          variants={slideInLeft}
+        >
           <iframe
             title="Localização ODuh Ruggeri"
             src={MAPS_EMBED_URL}
@@ -20,9 +35,15 @@ const Location = () => (
             loading="lazy"
             allowFullScreen
           />
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col justify-center rounded-xl border border-border bg-card p-6 md:p-8">
+        <motion.div
+          className="flex flex-col justify-center rounded-xl border border-border bg-card p-6 md:p-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          variants={slideInRight}
+        >
           <div className="mb-6 flex items-start gap-3">
             <MapPin className="mt-1 flex-shrink-0 text-gold" size={22} />
             <div>
@@ -60,7 +81,7 @@ const Location = () => (
               Abrir no Maps
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   </section>

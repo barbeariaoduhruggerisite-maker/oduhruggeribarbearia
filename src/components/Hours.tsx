@@ -1,26 +1,46 @@
 import { Clock } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeInUp, stagger, staggerSlow, viewport } from "@/lib/motion";
 
 const schedule = [
   { day: "Segunda-feira", hours: "09:00 – 20:00", highlight: false },
-  { day: "Terça-feira", hours: "09:00 – 20:00", highlight: false },
-  { day: "Quarta-feira", hours: "09:00 – 20:00", highlight: false },
-  { day: "Quinta-feira", hours: "09:00 – 21:00", highlight: true },
-  { day: "Sexta-feira", hours: "09:00 – 21:00", highlight: true },
-  { day: "Sábado", hours: "09:00 – 20:00", highlight: false },
-  { day: "Domingo", hours: "Fechado", closed: true },
+  { day: "Terça-feira",   hours: "09:00 – 20:00", highlight: false },
+  { day: "Quarta-feira",  hours: "09:00 – 20:00", highlight: false },
+  { day: "Quinta-feira",  hours: "09:00 – 21:00", highlight: true  },
+  { day: "Sexta-feira",   hours: "09:00 – 21:00", highlight: true  },
+  { day: "Sábado",        hours: "09:00 – 20:00", highlight: false },
+  { day: "Domingo",       hours: "Fechado",        closed: true     },
 ];
+
+const rowVariant = {
+  hidden:  { opacity: 0, x: -24 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.45, ease: "easeOut" } },
+};
 
 const Hours = () => (
   <section id="horarios" className="scroll-mt-24 py-20 bg-secondary">
     <div className="container mx-auto max-w-lg px-4">
-      <h2 className="mb-10 text-center text-3xl md:text-4xl">
+      <motion.h2
+        className="mb-10 text-center text-3xl md:text-4xl"
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        variants={fadeInUp}
+      >
         Horário de <span className="text-gold">Funcionamento</span>
-      </h2>
+      </motion.h2>
 
-      <div className="space-y-3 rounded-2xl border border-border bg-card p-6 md:p-8">
+      <motion.div
+        className="space-y-3 rounded-2xl border border-border bg-card p-6 md:p-8"
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewport}
+        variants={staggerSlow}
+      >
         {schedule.map((item) => (
-          <div
+          <motion.div
             key={item.day}
+            variants={rowVariant}
             className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
               item.highlight ? "border border-gold/20 bg-gold/10" : item.closed ? "opacity-50" : ""
             }`}
@@ -46,9 +66,9 @@ const Hours = () => (
                 </span>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   </section>
 );
